@@ -24,8 +24,9 @@ const Bouquet = sequelize.define("Bouquet", {
     allowNull: false,
   },
   liked:{
-    type : DataTypes.BOOLEAN,
-    defaultValue:false
+    type : DataTypes.INTEGER,
+    defaultValue:0,
+    allowNull:false,
   }
 ,
   totalLikes: {

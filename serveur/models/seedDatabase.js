@@ -1,17 +1,17 @@
-const { Bouquet, Fleur, User} = require('./RelationShip');
+const { Bouquet, Fleur, User,Likes} = require('./RelationShip');
 const sequelize =require('./index');
 
 async function seedDatabase() {
   await sequelize.sync({ force: true }); 
-
+  await Likes.destroy({ where: {} }); 
   // Utilisateurs
-  await User.findOrCreate({
+  const tintin= await User.findOrCreate({
     where: { login: 'mayoutinhinane7@gmail.com' },
     defaults: { password: 'tin20hi7na20ne', nomUser: 'Tinhinane' },
   });
-  await User.findOrCreate({
+  const fadou= await User.findOrCreate({
     where: { login: 'fadila.maiou@se.univ-bejaia.dz' },
-    defaults: { password: 'tin20hi7na20ne', nomUser: 'Fadila' },
+    defaults: { password: 't20hi7na20ne', nomUser: 'Fadila' },
   });
 
   // Fleurs
@@ -31,9 +31,10 @@ async function seedDatabase() {
       description: 'Un arrangement raffiné de roses blanches et de pivoines, parfait pour célébrer le plus beau jour de votre vie.',
       image: '/assets/images/bouquetMariage.jpg',
       prix:3500,
-      totalLikes: 10,
+      totalLikes: 2,
     },
   });
+ 
 
   const bouquet2 = await Bouquet.findOrCreate({
     where: { nom: 'Bouquet de Naissance Douceur' },
@@ -76,6 +77,14 @@ async function seedDatabase() {
 
 
   // Relation fleurs-bouquets
+  await Likes.findOrCreate({
+    where: { UserId: tintin[0].id, BouquetId: bouquet1[0].id }
+  });
+  await Likes.findOrCreate({
+    where: { UserId: fadou[0].id, BouquetId: bouquet1[0].id }
+  });
+  
+  
   await bouquet1[0].addFleur(rose[0], { through: { quantity: 10 } });
   await bouquet1[0].addFleur(tulip[0], { through: { quantity: 5 } });
   await bouquet2[0].addFleur(rose[0], { through: { quantity: 20} });
